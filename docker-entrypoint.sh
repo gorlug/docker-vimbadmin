@@ -31,7 +31,9 @@ do
         exec "$@"
       else
         echo "Creating DB and Superuser"
-        HASH_PASS=`php -r "echo password_hash('${ADMIN_PASSWORD}', PASSWORD_DEFAULT);"`
+        HASH_PASS_LONG=`doveadm pw -s SHA512-CRYPT -p ${ADMIN_PASSWORD}`
+        # remove the prefix
+        HASH_PASS=${HASH_PASS_LONG#\{SHA512-CRYPT\}}
         ./bin/doctrine2-cli.php orm:schema-tool:create
         mysql -u vimbadmin -p${DB_ENV_MYSQL_PASSWORD} -h db vimbadmin -e \
           "INSERT INTO admin (username, password, super, active, created, modified) VALUES ('${ADMIN_EMAIL}', '$HASH_PASS', 1, 1, NOW(), NOW())" && \

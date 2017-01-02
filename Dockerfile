@@ -12,6 +12,7 @@ RUN apt-get update \
       libmcrypt-dev \
       mysql-client \
       patch \
+      dovecot-core \
  && rm -rf /var/lib/apt/lists/* \
  && pecl install memcache \
  && docker-php-ext-enable memcache \
